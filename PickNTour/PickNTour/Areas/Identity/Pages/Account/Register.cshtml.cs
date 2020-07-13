@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using PickNTour.Areas.Identity.Data;
+using PickNTour.Data;
 
 namespace PickNTour.Areas.Identity.Pages.Account
 {
@@ -22,19 +23,25 @@ namespace PickNTour.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _db;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+             ILogger<RegisterModel> logger,
+            IEmailSender emailSender,
+             RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
+            _db = db;
         }
 
         [BindProperty]
@@ -95,6 +102,29 @@ namespace PickNTour.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+
+                    /* Enable and follow the example if you would like to add more custom roles from UserRoles.cs, 
+                       requires a registration of new account to trigger.
+                     */
+                    if (!await _roleManager.RoleExistsAsync(UserRoles.UserAdmin))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserAdmin));
+                    }
+
+                    if (!await _roleManager.RoleExistsAsync(UserRoles.UserTourGuide))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserTourGuide));
+                    }
+
+                    if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                    }
+
+                    /* Enable to Force any new registrations to have admin role granted.*/
+                    await _userManager.AddToRoleAsync(user, UserRoles.UserAdmin);
+
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
