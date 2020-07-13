@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PickNTour.Areas.Identity.Data;
 
 namespace PickNTour.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,9 +36,20 @@ namespace PickNTour.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Full Name")]
+            public string FullName { get; set; }
+
+
+            [Required]
+            [DataType(DataType.Date)]
+            [Display(Name = "Date Of Birth")]
+            public DateTime DateOfBirth { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -46,7 +58,10 @@ namespace PickNTour.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FullName = user.FullName,
+                DateOfBirth = user.DateOfBirth
+                
             };
         }
 
@@ -86,6 +101,12 @@ namespace PickNTour.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
+
+            if (Input.FullName != user.FullName)
+                user.FullName = Input.FullName;
+
+            if (Input.DateOfBirth != user.DateOfBirth)
+                user.DateOfBirth = Input.DateOfBirth;
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
