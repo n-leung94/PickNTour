@@ -13,8 +13,10 @@ namespace PickNTour.Models
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Tour Name")]
         public string Name { get; set; }
 
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         public string UserId { get; set; }
@@ -26,25 +28,33 @@ namespace PickNTour.Models
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Start Location")]
         public string StartLocation { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "End Location")]
         public string EndLocation { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
+        [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
+        [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
 
         [Required]
         [DataType(DataType.Currency)]
+        [Display(Name = "Price")]
         public double Price { get; set; }
 
         [Required]
+        [Display(Name = "Tour Capacity")]
         public int TourCapacity { get; set; }
 
         public int TourAvailability { get; set; }

@@ -1,0 +1,79 @@
+﻿@model PickNTour.Models.Tour
+
+@{
+    ViewData["Title"] = "TourForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form asp-controller="Tours" asp-action="Save" method="post">
+    <h4>Tour Form</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Country"></label>
+        <select asp-for="Country" asp-items="@(new SelectList(ViewBag.CountryList))" class="form-control"></select>
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartLocation"></label>
+        <input asp-for="StartLocation" class="form-control" />
+        <span asp-validation-for="StartLocation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndLocation"></label>
+        <input asp-for="EndLocation" class="form-control" />
+        <span asp-validation-for="EndLocation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TourCapacity"></label>
+        <input asp-for="TourCapacity" class="form-control" />
+        <span asp-validation-for="TourCapacity" class="text-danger"></span>
+    </div>
+
+
+    @Html.HiddenFor(t => t.User.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
