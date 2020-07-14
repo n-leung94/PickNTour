@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PickNTour.Areas.Identity.Data;
+using PickNTour.Models;
 
 namespace PickNTour.Data
 {
@@ -18,5 +19,7 @@ namespace PickNTour.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Tour> Tours { get; set; }
     }
 }
