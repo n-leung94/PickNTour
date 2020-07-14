@@ -80,6 +80,10 @@ namespace PickNTour.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Register as Tour Guide ?")]
+            public bool isTourGuide { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -106,24 +110,31 @@ namespace PickNTour.Areas.Identity.Pages.Account
                     /* Enable and follow the example if you would like to add more custom roles from UserRoles.cs, 
                        requires a registration of new account to trigger.
                      */
-                    if (!await _roleManager.RoleExistsAsync(UserRoles.UserAdmin))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserAdmin));
-                    }
+                    /*
+                   if (!await _roleManager.RoleExistsAsync(UserRoles.UserAdmin))
+                   {
+                       await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserAdmin));
+                   }
 
-                    if (!await _roleManager.RoleExistsAsync(UserRoles.UserTourGuide))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserTourGuide));
-                    }
+                   if (!await _roleManager.RoleExistsAsync(UserRoles.UserTourGuide))
+                   {
+                       await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserTourGuide));
+                   }
 
-                    if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-                    }
+                   if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                   {
+                       await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                   }
+                   */
 
                     /* Enable to Force any new registrations to have admin role granted.*/
-                    await _userManager.AddToRoleAsync(user, UserRoles.UserAdmin);
+                    // await _userManager.AddToRoleAsync(user, UserRoles.UserAdmin);
 
+                    if(Input.isTourGuide)
+                        await _userManager.AddToRoleAsync(user, UserRoles.UserTourGuide);
+
+                    else
+                        await _userManager.AddToRoleAsync(user, UserRoles.User);
 
                     _logger.LogInformation("User created a new account with password.");
 
