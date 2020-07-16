@@ -43,6 +43,7 @@ namespace PickNTour.Models
         public DateTime StartDate { get; set; }
 
         [Required]
+        [EndDateNotEarlierThanStartDate]
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         [Display(Name = "End Date")]
@@ -55,6 +56,7 @@ namespace PickNTour.Models
 
         [Required]
         [Display(Name = "Tour Capacity")]
+        [Range(1, 100)]
         public int TourCapacity { get; set; }
 
         public int TourAvailability { get; set; }
