@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PickNTour.Areas.Identity.Data;
+using AutoMapper;
 
 namespace PickNTour
 {
@@ -41,6 +42,7 @@ namespace PickNTour
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHttpContextAccessor();

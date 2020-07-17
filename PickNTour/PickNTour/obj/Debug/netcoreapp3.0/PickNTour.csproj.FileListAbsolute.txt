@@ -141,6 +141,4 @@ C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreap
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_CookieConsentPartial.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\bin\Debug\netcoreapp3.0\AutoMapper.dll
-C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\PickNTour.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\PickNTour.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Tours\TourForm.cshtml.g.cs
