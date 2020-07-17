@@ -30,7 +30,7 @@ namespace PickNTour.Controllers.api
             _mapper = mapper;
         }
 
-
+        
         [HttpGet]
         public IEnumerable<TourDto> GetAllTours()
         {
@@ -41,8 +41,33 @@ namespace PickNTour.Controllers.api
                 .Select(_mapper.Map<Tour, TourDto>);
 
             return (tourDto);
+          
+        }
+        
 
-            
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTour(int id)
+        {
+            // First, check that such tour exists in the db.
+            var tourInDb = _context.Tours.SingleOrDefault(t => t.Id.Equals(id));
+
+            if (tourInDb == null)
+                return NotFound();
+
+            // Ensure that the delete request was sent by the original user that created the tour.
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
+            if (!tourInDb.UserId.Equals(currUser))
+                return BadRequest();
+
+
+            //If all checks pass, delete from the database.
+            _context.Tours.Remove(tourInDb);
+            _context.SaveChanges();
+
+            return Ok();
+
+
         }
     }
 
