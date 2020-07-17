@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using PickNTour.Dtos;
 
 namespace PickNTour.Models
 {
@@ -11,6 +12,7 @@ namespace PickNTour.Models
         public AutoMapperProfile()
         {
             //CreateMap<Model, DTO>();
+            CreateMap<Tour, TourDto>();
         }
 
     }

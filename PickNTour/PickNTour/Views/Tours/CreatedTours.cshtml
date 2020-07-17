@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewData["Title"] = "CreatedTours";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Created Tours</h1>
+
+<div>
+    <table id="tours" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tour Name</th>
+                <th>Tour Description</th>
+                <th>Country</th>
+                <th>Start Location</th>
+                <th>End Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price</th>
+                <th>Tour Capacity</th>
+                <th>Slots Remaining</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#tours").DataTable({
+                ajax: {
+                    url: "/api/owntours",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, tour) {
+                            return "<a href='/tours/edit/" + tour.id + "'>" + tour.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "description"
+                    },
+                    {
+                        data:"country"
+                    },
+                    {
+                        data:"startLocation"
+                    },
+                    {
+                        data:"endLocation"
+                    },
+                    {
+                        data:"startDate"
+                    },
+                    {
+                        data:"endDate"
+                    },
+                    {
+                        data:"price"
+                    },
+                    {
+                        data:"tourCapacity"
+                    },
+                    {
+                        data:"tourAvailability"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-tour-id=" + data + ">Delete</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+        });
+
+
+
+    </script>
+
+
+
+}

@@ -74,5 +74,10 @@ namespace PickNTour.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult CreatedTours()
+        {
+            return View();
+        }
     }
 }
