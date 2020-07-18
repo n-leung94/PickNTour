@@ -10,6 +10,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using PickNTour.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using PickNTour.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace PickNTour.Controllers.api
 {
@@ -19,18 +22,29 @@ namespace PickNTour.Controllers.api
     {
         private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public ToursController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ToursController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public IEnumerable<Tour> GetAllTours()
+        public IEnumerable<PublicTourDto> GetAvailableTours()
         {
-            var currUser = _userManager.GetUserId(HttpContext.User);
-            return _context.Tours.Where(t => t.UserId.Equals(currUser)).ToList();
+            // Return list of tours that hasn't started yet.
+            
+            var availableTours =  _context.Tours
+                                    .Where(t => t.StartDate >= DateTime.Now)
+                                    .Include(t => t.User);
+
+            
+            return availableTours                 
+                    .ToList()
+                    .Select(_mapper.Map<Tour, PublicTourDto>);
+                      
         }
     }
 }

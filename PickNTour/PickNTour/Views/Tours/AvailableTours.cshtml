@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewData["Title"] = "AvailableTours";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Available Tours</h1>
+
+<div>
+    <table id="tours" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tour Name</th>
+                <th>Tour Description</th>
+                <th>Tour Guide</th>
+                <th>Country</th>
+                <th>Start Location</th>
+                <th>End Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price</th>
+                <th>Slots Remaining</th>
+                <th>Book</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#tours").DataTable({
+                ajax: {
+                    url: "/api/tours",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, tour) {
+                            return "<a href='/tours/details/" + tour.id + "'>" + tour.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "description"
+                    },
+                    {
+                        data: "user.fullName"
+                    },
+                    {
+                        data:"country"
+                    },
+                    {
+                        data:"startLocation"
+                    },
+                    {
+                        data:"endLocation"
+                    },
+                    {
+                        data:"startDate"
+                    },
+                    {
+                        data:"endDate"
+                    },
+                    {
+                        data:"price"
+                    },
+                    {
+                        data:"tourAvailability"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-book' data-tour-id=" + data + ">Book</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+
+            $("#tourss").on("click", ".js-book", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to book this tour?", function (result) {
+                    if (result) {
+                        console.log("Created Booking");
+                    }
+
+                });
+
+            });
+
+
+        });
+
+
+
+    </script>
+
+
+
+}

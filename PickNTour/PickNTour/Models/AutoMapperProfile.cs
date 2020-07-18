@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PickNTour.Dtos;
+using PickNTour.Areas.Identity.Data;
 
 namespace PickNTour.Models
 {
@@ -13,6 +14,8 @@ namespace PickNTour.Models
         {
             //CreateMap<Model, DTO>();
             CreateMap<Tour, TourDto>();
+            CreateMap<ApplicationUser, TourGuideDto>();
+            CreateMap<Tour, PublicTourDto>();
         }
 
     }
