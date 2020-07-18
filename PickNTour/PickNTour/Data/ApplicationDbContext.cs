@@ -21,5 +21,6 @@ namespace PickNTour.Data
         }
 
         public DbSet<Tour> Tours { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
     }
 }

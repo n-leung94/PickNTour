@@ -15,6 +15,7 @@ using AutoMapper;
 
 namespace PickNTour.Controllers.api
 {
+    [Authorize(Roles = UserRoles.UserTourGuide)]
     [Route("api/[controller]")]
     [ApiController]
     public class OwnToursController : ControllerBase

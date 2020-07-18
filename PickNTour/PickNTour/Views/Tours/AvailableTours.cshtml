@@ -51,25 +51,25 @@
                         data: "user.fullName"
                     },
                     {
-                        data:"country"
+                        data: "country"
                     },
                     {
-                        data:"startLocation"
+                        data: "startLocation"
                     },
                     {
-                        data:"endLocation"
+                        data: "endLocation"
                     },
                     {
-                        data:"startDate"
+                        data: "startDate"
                     },
                     {
-                        data:"endDate"
+                        data: "endDate"
                     },
                     {
-                        data:"price"
+                        data: "price"
                     },
                     {
-                        data:"tourAvailability"
+                        data: "tourAvailability"
                     },
                     {
                         data: "id",
@@ -83,12 +83,25 @@
 
             });
 
-            $("#tourss").on("click", ".js-book", function () {
+
+
+            $("#tours").on("click", ".js-book", function () {
                 var button = $(this);
 
                 bootbox.confirm("Are you sure you want to book this tour?", function (result) {
                     if (result) {
-                        console.log("Created Booking");
+                        $.ajax({
+                            url: "/api/tours/" + button.attr("data-tour-id"),
+                            method: "POST",
+                            success: function (response) {
+                                toastr.success("Successfully booked the tour!");
+                                table.ajax.reload();
+                            },
+                            fail: function () {
+                            toastr.error("Error: Something unexpected happened.");
+                             }
+
+                        });
                     }
 
                 });
