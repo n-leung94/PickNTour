@@ -61,13 +61,31 @@ namespace PickNTour.Controllers.api
             if (!tourInDb.UserId.Equals(currUser))
                 return BadRequest();
 
+            // Remove any Bookings associated with the tour
+            removeBookingsFromTour(id);
+
 
             //If all checks pass, delete from the database.
             _context.Tours.Remove(tourInDb);
             _context.SaveChanges();
 
+            // Future Implementation to send out notification to affected users.
+
             return Ok();
 
+
+        }
+
+        public void removeBookingsFromTour(int tourId)
+        {
+            var bookings = _context.Bookings.Where(b => b.Tour.Id == tourId);
+
+            foreach(var booking in bookings)
+            {
+                _context.Remove(booking);
+            }
+
+            _context.SaveChanges();
 
         }
     }
