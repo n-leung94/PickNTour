@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewData["Title"] = "AvailableTours";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Upcoming Bookings</h1>
+
+<div>
+    <table id="bookings" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tour Name</th>
+                <th>Tour Description</th>
+                <th>Tour Guide</th>
+                <th>Country</th>
+                <th>Start Location</th>
+                <th>End Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price</th>
+                <th>Date Booked</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#bookings").DataTable({
+                ajax: {
+                    url: "/api/bookedtours/getupcomingbookings/",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "tour",
+                        render: function (data, type, tour) {
+                            return "<a href='/tours/details/" + data.id + "'>" + data.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "tour.description"
+                    },
+                    {
+                        data: "tour.user.fullName"
+                    },
+                    {
+                        data: "tour.country"
+                    },
+                    {
+                        data: "tour.startLocation"
+                    },
+                    {
+                        data: "tour.endLocation"
+                    },
+                    {
+                        data: "tour.startDate"
+                    },
+                    {
+                        data: "tour.endDate"
+                    },
+                    {
+                        data: "tour.price"
+                    },
+                    {
+                        data: "dateBooked"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-cancel' data-booking-id=" + data + ">Cancel Booking</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+
+
+
+            $("#bookings").on("click", ".js-cancel", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to cancel this booking?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/tours/" + button.attr("data-booking-id"),
+                            method: "DELETE",
+                            success: function (response) {
+                                toastr.success("Successfully cancelled the booking!");
+                                table.row(button.parents("tr")).remove().draw();
+                            },
+                            fail: function () {
+                            toastr.error("Error: Something unexpected happened.");
+                             }
+
+                        });
+                    }
+
+                });
+
+            });
+
+
+        });
+
+
+
+    </script>
+
+
+
+}

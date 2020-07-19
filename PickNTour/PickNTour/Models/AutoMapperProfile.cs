@@ -16,6 +16,7 @@ namespace PickNTour.Models
             CreateMap<Tour, TourDto>();
             CreateMap<ApplicationUser, TourGuideDto>();
             CreateMap<Tour, PublicTourDto>();
+            CreateMap<Booking, BookingDto>();
         }
 
     }

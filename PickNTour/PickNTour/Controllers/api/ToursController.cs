@@ -79,5 +79,36 @@ namespace PickNTour.Controllers.api
 
             return Ok();
         }
+
+        [Authorize(Roles = UserRoles.User)]
+        [HttpDelete("{id}")]
+        public IActionResult CancelBooking(int id)
+        {
+            // Find if Booking ID exists in DB
+            var bookingInDb = _context.Bookings.Single(b => b.Id == id);
+
+            if (bookingInDb == null)
+                return NotFound();
+
+            // Find the Tour that the booking cancellation will affect
+            var tourInDb = _context.Tours.Single(t => t.Id == bookingInDb.TourId);
+
+            if (tourInDb == null)
+                return NotFound();
+
+            // If Booking Exists, remove entry from DB
+            _context.Bookings.Remove(bookingInDb);
+
+            // Free up an available slot on the Tour
+            tourInDb.TourAvailability += 1;
+
+            
+            
+
+            _context.SaveChanges();
+
+
+            return Ok();
+        }
     }
 }

@@ -39,6 +39,13 @@ namespace PickNTour.Controllers
             return View();
         }
 
+        [Authorize(Roles = UserRoles.User)]
+        public IActionResult UpcomingBookings()
+        {
+            return View();
+        }
+
+
         [Authorize(Roles = UserRoles.UserTourGuide)]
         public IActionResult Create()
         {
