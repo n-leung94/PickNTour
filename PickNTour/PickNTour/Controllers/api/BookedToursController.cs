@@ -45,6 +45,21 @@ namespace PickNTour.Controllers.api
                      
         }
 
+        [HttpGet]
+        public IEnumerable<BookingDto> GetBookingHistory()
+        {
+            var currUser = _userManager.GetUserId(HttpContext.User);
+            var bookings = _context.Bookings.Where(b => b.UserId.Equals(currUser) && b.Tour.StartDate < DateTime.Now)
+                                            .Include(b => b.Tour)
+                                            .Include(b => b.Tour.User);
+
+            var bookingDto = bookings.ToList()
+                               .Select(_mapper.Map<Booking, BookingDto>);
+
+            return bookingDto;
+
+        }
+
 
     }
 }
