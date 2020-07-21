@@ -30,8 +30,25 @@ namespace PickNTour.Controllers
             return View();
         }
 
-        public IActionResult Compose()
+        [Route("messages/compose/{UserName}")]
+        [Route("messages/compose/")]
+        public IActionResult Compose(string UserName)
         {
+            if (!string.IsNullOrWhiteSpace(UserName))
+            {
+                var recipientInDb = _context.Users.Single(u => u.UserName.Equals(UserName));
+
+                var viewModel = new SendMessageFormViewModel
+                {
+                    UserName = recipientInDb.UserName
+                    
+                };
+
+                return View(viewModel);
+            }
+            
+
+
             return View();
         }
 

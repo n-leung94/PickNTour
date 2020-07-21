@@ -53,9 +53,9 @@
                         data: "userFrom.fullName"
                     },
                     {
-                        data: "userFrom.id",
+                        data: "userFrom.userName",
                         render: function (data) {
-                            return "<button class='btn-link js-reply' data-user-id='" + data + "'>Reply</button>"
+                            return "<button class='btn-link js-reply' data-user-userName='" + data + "'>Reply</button>"
                         }
                     },                  
                     {
@@ -96,6 +96,20 @@
                 var viewMsgBtn = $(this);
 
                 bootbox.alert(viewMsgBtn.attr("data-msg"));
+
+            });
+
+            $("#inbox").on("click", ".js-reply", function () {
+                var replyBtn = $(this);
+
+                bootbox.confirm("Are you sure you want to reply to " + replyBtn.attr("data-user-userName") + " ?", function (result) {
+                    if (result) {
+                        window.location.replace("/messages/compose/" + replyBtn.attr("data-user-userName"));
+                        
+                    }
+
+                });
+
 
             });
 
