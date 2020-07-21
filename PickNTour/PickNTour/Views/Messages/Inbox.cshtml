@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewData["Title"] = "Inbox";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Inbox</h1>
+
+<div>
+    <table id="inbox" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Date Sent</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Reply</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#inbox").DataTable({
+                ajax: {
+                    url: "/api/messages/getreceivedmessages",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "dateSent"
+
+                    },
+                    {
+                        data: "subject"
+                    },
+                    {
+                        data: "messageBody",
+                        render: function (data) {
+                            return "<button class='btn-link js-viewmsg' data-msg='" + data + "'>View Message</button>"
+                        }
+                    },
+                    {
+                        data: "userFrom.userName"
+                    },
+                    {
+                        data: "userFrom.fullName"
+                    },
+                    {
+                        data: "userFrom.id",
+                        render: function (data) {
+                            return "<button class='btn-link js-reply' data-user-id='" + data + "'>Reply</button>"
+                        }
+                    },                  
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-delete-id=" + data + ">Delete</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+
+            $("#inbox").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to delete this message?", function (result) {
+                    if (result) {
+                        
+                        console.Log("Deleted Message");
+                        
+                    }
+
+                });
+
+            });
+
+            $("#inbox").on("click", ".js-viewmsg", function () {
+                var viewMsgBtn = $(this);
+
+                bootbox.alert(viewMsgBtn.attr("data-msg"));
+
+            });
+
+
+
+        });
+    </script>
+
+
+
+
+}
