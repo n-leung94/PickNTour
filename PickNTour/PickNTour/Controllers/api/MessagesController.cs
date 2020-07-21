@@ -51,5 +51,19 @@ namespace PickNTour.Controllers.api
 
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMessage(int id)
+        {
+            var messageInDb = _context.Messages.SingleOrDefault(m => m.Id == id);
+
+            if (messageInDb == null)
+                return NotFound();
+
+            _context.Remove(messageInDb);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
     }
 }

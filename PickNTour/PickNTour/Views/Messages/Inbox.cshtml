@@ -76,7 +76,15 @@
                 bootbox.confirm("Are you sure you want to delete this message?", function (result) {
                     if (result) {
                         
-                        console.Log("Deleted Message");
+                        $.ajax({
+                            url: "/api/messages/deletemessage/" + button.attr("data-delete-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+
+                        });
+
                         
                     }
 
