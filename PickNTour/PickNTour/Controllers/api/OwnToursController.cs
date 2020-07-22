@@ -12,6 +12,7 @@ using PickNTour.Data;
 using PickNTour.Models;
 using PickNTour.Dtos;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace PickNTour.Controllers.api
 {
@@ -22,16 +23,16 @@ namespace PickNTour.Controllers.api
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
+        private readonly IMapper _Mapper;
 
         public OwnToursController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
-            _mapper = mapper;
+            _Mapper = mapper;
         }
 
-        
+
         [HttpGet]
         public IEnumerable<TourDto> GetAllTours()
         {
@@ -39,10 +40,39 @@ namespace PickNTour.Controllers.api
             var tours = _context.Tours.Where(t => t.UserId.Equals(currUser));
             var tourDto = tours
                 .ToList()
-                .Select(_mapper.Map<Tour, TourDto>);
+                .Select(_Mapper.Map<Tour, TourDto>);
 
             return (tourDto);
-          
+
+        }
+
+        [HttpGet("{tourId}")]
+        [Route("tourparticipants/{tourId}")]
+        public IActionResult GetTourParticipants(int tourId)
+        {
+            // First check that the user enquiring the data is the actual owner of the tour
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
+            var tourInDb = _context.Tours.SingleOrDefault(t => t.Id == tourId);
+
+            if (tourInDb == null)
+                return NotFound();
+
+            if (!tourInDb.UserId.Equals(currUser))
+                return BadRequest();
+
+
+            var participants = _context.Bookings.Include(b => b.User)
+                .Where(b => b.TourId == tourId)
+                .Select(b => b.User);
+
+            var userQueryDto = participants.ToList()
+                               .Select(_Mapper.Map<ApplicationUser, UserQueryDto>);
+
+            return Ok(userQueryDto);
+
+                 
+                               
         }
         
 
