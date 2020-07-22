@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PickNTour.Controllers.api
 {
+    [Authorize(Roles = UserRoles.User)]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class BookedToursController : ControllerBase

@@ -141,7 +141,7 @@
                         label: "Message All",
                         className: "btn-primary",
                         callback: function() {
-                            console.log('OK Button');
+                            window.location.replace("/tourgroupmessage/compose/" + button.attr("data-tour-id"));
                         }
                         },
                         cancel: {

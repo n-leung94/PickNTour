@@ -1,22 +1,23 @@
 ﻿
-@model PickNTour.ViewModels.SendMessageFormViewModel
+
+@model PickNTour.ViewModels.MessageTGViewModel
 
 @{
-    ViewData["Title"] = "Compose Message";
+    ViewData["Title"] = "MessageTourGroup";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h1>MessageTourGroup</h1>
 
-
-<form asp-controller="Messages" asp-action="Send" method="post">
+<form asp-controller="TourGroupMessage" asp-action="Send" method="post">
     <h4>Compose Message</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
+        <label asp-for="TourName"></label>
+        <input asp-for="TourName" readonly class="form-control" />
+        <span asp-validation-for="TourName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -30,6 +31,13 @@
         <textarea asp-for="MessageBody" class="form-control"></textarea>
         <span asp-validation-for="MessageBody" class="text-danger"></span>
     </div>
+
+
+    @Html.HiddenFor(t => t.TourId)
+    @for(int i = 0; i < Model.Participants.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.Participants[i])
+    }
 
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-primary">Submit</button>

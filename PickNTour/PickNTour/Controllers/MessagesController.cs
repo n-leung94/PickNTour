@@ -13,6 +13,7 @@ using PickNTour.Data;
 
 namespace PickNTour.Controllers
 {
+    [Authorize(Roles = UserRoles.UserTourGuide + "," + UserRoles.UserAdmin + "," + UserRoles.User)]
     public class MessagesController : Controller
     {
         private ApplicationDbContext _context { get; set; }
