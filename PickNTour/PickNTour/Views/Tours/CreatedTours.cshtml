@@ -20,10 +20,27 @@
                 <th>Price</th>
                 <th>Tour Capacity</th>
                 <th>Slots Remaining</th>
+                <th>View Participants</th>
                 <th>Delete</th>
             </tr>
         </thead>
     </table>
+
+    <div id="hidden-container" style="display:none">
+        <table class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Send PM</th>
+                </tr>
+            </thead>
+
+
+        </table>
+
+    </div>
+
 </div>
 
 
@@ -74,6 +91,12 @@
                     {
                         data: "id",
                         render: function (data) {
+                            return "<button class='btn-link js-viewusers' data-tour-id=" + data + ">View Participants</button>"
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
                             return "<button class='btn-link js-delete' data-tour-id=" + data + ">Delete</button>"
                         }
                     }
@@ -102,6 +125,78 @@
                 });
 
             });
+
+            $("#tours").on("click", ".js-viewusers", function () {
+                var button = $(this);
+
+                var container = $("#hidden-container").clone();
+                container.find('table').attr('id', 'users');
+
+                var box = bootbox.dialog({
+                    show: false,
+                    message: container.html(),
+                    title: "Participants",
+                    buttons: {
+                        ok: {
+                        label: "Message All",
+                        className: "btn-primary",
+                        callback: function() {
+                            console.log('OK Button');
+                        }
+                        },
+                        cancel: {
+                        label: "Close",
+                        className: "btn-default"
+                        }
+                    }
+                });
+      
+                box.on("shown.bs.modal", function() {
+                    $('#users').DataTable({
+                        ajax: {
+                            url: "/api/owntours/tourparticipants/" + button.attr("data-tour-id"),
+                            dataSrc: ""
+                         },
+
+                        columns: [
+                            {
+                                data: "userName"
+                                
+                            },
+                            {
+                                data: "fullName"
+                            },
+                            {
+                                data: "userName",
+                                render: function (data) {
+                                    return "<button class='btn-link js-sendpm' data-pm-id=" + data + ">Send PM</button>"
+                                }
+                            }
+
+                        ]
+
+
+                    }); 
+
+                });
+
+                $("#users").on("click", ".js-sendpm", function () {
+                    var button = $(this);
+
+                    window.location.replace("/messages/compose/" + button.attr("data-pm-id"));
+
+                });
+
+
+
+      
+                    box.modal('show'); 
+            });
+
+
+               
+
+           
 
         });
 
