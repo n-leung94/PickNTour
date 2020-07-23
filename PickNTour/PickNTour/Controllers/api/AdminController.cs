@@ -44,6 +44,32 @@ namespace PickNTour.Controllers.api
             return Ok(adminUserDto);
         }
 
+        [HttpGet]
+        public IActionResult GetLockedoutUsers()
+        {
+            var lockedoutUsers = _context.Users.Where(u => u.LockoutEnd != null).ToList();
+       
+            var adminUserDto = lockedoutUsers.Select(_mapper.Map<ApplicationUser, AdminUserQueryDto>);
+
+            return Ok(adminUserDto);
+        }
+
+        [HttpPut("{userId}")]
+        public IActionResult ReleaseLockout(string userId)
+        {
+            var userInDb = _context.Users.SingleOrDefault(u => u.Id.Equals(userId));
+
+            if (userInDb == null)
+                return NotFound();
+
+            userInDb.LockoutEnd = null;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+
         [HttpPut("{userId}/{date}")]
         public IActionResult LockoutUser(string userId, DateTime date)
         {

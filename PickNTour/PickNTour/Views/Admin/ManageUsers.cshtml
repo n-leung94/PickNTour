@@ -5,28 +5,51 @@
 }
 
 <h1>User Management</h1>
+<div id="tabs">
+    <ul>
+        <li><a href="#user-tab">Manage Users</a></li>
+        <li><a href="#lockout-tab">Lockedout Users</a></li>
+    </ul>
 
-<div>
-    <table id="users" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>User Name</th>
-                <th>Full Name</th>
-                <th>Date Of Birth</th>
-                <th>Phone Number</th>
-                <th>Lockout</th>
-            </tr>
-        </thead>
-    </table>
+    <div id="user-tab">
+        <table id="users" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone Number</th>
+                    <th>Lockout</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
+    <div id="lockout-tab">
+        <table id="lockoutUsers" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Phone Number</th>
+                    <th>Lockout End</th>
+                    <th>Release Lockout</th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
 
 </div>
-
 
 @section scripts
 {
     <script>
         $(document).ready(function () {
+
+            $("#tabs").tabs();
+
+
             var table = $("#users").DataTable({
                 ajax: {
                     url: "/api/admin/getallusers",
@@ -36,16 +59,16 @@
                 columns: [
                     {
                         data: "userName"
-               
+
                     },
                     {
                         data: "fullName"
                     },
                     {
-                        data:"dateOfBirth"
+                        data: "dateOfBirth"
                     },
                     {
-                        data:"phoneNumber"
+                        data: "phoneNumber"
                     },
                     {
                         data: "id",
@@ -59,6 +82,40 @@
 
             });
 
+            var suspendedtable = $("#lockoutUsers").DataTable({
+                ajax: {
+                    url: "/api/admin/getlockedoutusers",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "userName"
+
+                    },
+                    {
+                        data: "fullName"
+                    },
+                    {
+                        data: "phoneNumber"
+                    },
+                    {
+                        data: "lockoutEnd"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-release' data-user-id=" + data + ">Release Lockout</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+
+
+
 
             $("#users").on("click", ".js-lockout", function () {
                 var button = $(this);
@@ -68,15 +125,49 @@
                     title: "Please select the date the user should be suspended until.",
                     inputType: 'date',
                     callback: function (result) {
-                        console.log(result);
                         $.ajax({
-                            url: "/api/admin/lockoutuser/" + button.attr("data-user-id") +"/" + result +"/",
+                            url: "/api/admin/lockoutuser/" + button.attr("data-user-id") + "/" + result + "/",
                             method: "PUT",
                             success: function () {
                                 table.row(button.parents("tr")).remove().draw();
+                                suspendedtable.ajax.reload();
                             }
 
                         });
+                    }
+                });
+
+            });
+
+             $("#lockoutUsers").on("click", ".js-release", function () {
+                var button = $(this);
+
+
+                bootbox.confirm({
+                    title: "Release Lockout",
+                    message: "Are you sure you want to release the lockout of the user?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Cancel'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirm'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/api/admin/releaselockout/" + button.attr("data-user-id"),
+                                method: "PUT",
+                                success: function () {
+                                    suspendedtable.row(button.parents("tr")).remove().draw();
+                                    table.ajax.reload();
+                                }
+
+                            });
+
+
+                        }
                     }
                 });
 

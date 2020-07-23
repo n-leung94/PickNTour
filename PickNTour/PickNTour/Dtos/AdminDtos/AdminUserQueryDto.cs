@@ -17,5 +17,8 @@ namespace PickNTour.Dtos.AdminDtos
 
         public string PhoneNumber { get; set; }
 
+        public DateTimeOffset LockoutEnd { get; set; }
+
     }
 }
+
