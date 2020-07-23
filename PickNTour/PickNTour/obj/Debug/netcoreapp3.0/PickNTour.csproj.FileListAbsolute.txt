@@ -152,3 +152,4 @@ C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreap
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Messages\Compose.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Messages\Inbox.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\TourGroupMessage\MessageTourGroup.cshtml.g.cs
+C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Admin\ManageUsers.cshtml.g.cs

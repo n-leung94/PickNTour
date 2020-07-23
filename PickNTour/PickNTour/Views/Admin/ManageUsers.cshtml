@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewData["Title"] = "ManagerUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>User Management</h1>
+
+<div>
+    <table id="users" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Full Name</th>
+                <th>Date Of Birth</th>
+                <th>Phone Number</th>
+                <th>Lockout</th>
+            </tr>
+        </thead>
+    </table>
+
+
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#users").DataTable({
+                ajax: {
+                    url: "/api/admin/getallusers",
+                    dataSrc: ""
+                },
+
+                columns: [
+                    {
+                        data: "userName"
+               
+                    },
+                    {
+                        data: "fullName"
+                    },
+                    {
+                        data:"dateOfBirth"
+                    },
+                    {
+                        data:"phoneNumber"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-lockout' data-user-id=" + data + ">Lockout</button>"
+                        }
+                    }
+
+                ]
+
+
+            });
+
+
+            $("#users").on("click", ".js-lockout", function () {
+                var button = $(this);
+
+
+                bootbox.prompt({
+                    title: "Please select the date the user should be suspended until.",
+                    inputType: 'date',
+                    callback: function (result) {
+                        console.log(result);
+                        $.ajax({
+                            url: "/api/admin/lockoutuser/" + button.attr("data-user-id") +"/" + result +"/",
+                            method: "PUT",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+
+                        });
+                    }
+                });
+
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+
+
+
+}

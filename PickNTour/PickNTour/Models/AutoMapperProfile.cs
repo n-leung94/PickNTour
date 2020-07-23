@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PickNTour.Dtos;
 using PickNTour.Areas.Identity.Data;
+using PickNTour.Dtos.AdminDtos;
 
 namespace PickNTour.Models
 {
@@ -19,6 +20,10 @@ namespace PickNTour.Models
             CreateMap<Booking, BookingDto>();
             CreateMap<ApplicationUser, UserQueryDto>();
             CreateMap<Message, ReadMessageDto>();
+
+
+            // Admin DTOs
+            CreateMap<ApplicationUser, AdminUserQueryDto>();
         }
 
     }
