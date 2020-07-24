@@ -73,17 +73,80 @@ namespace PickNTour.Controllers.api
         [HttpPut("{userId}/{date}")]
         public IActionResult LockoutUser(string userId, DateTime date)
         {
-            var userInDb = _context.Users.SingleOrDefault(u => u.Id.Equals(userId));
+            var userInDb = _context.Users.SingleOrDefault(u => u.Id.Equals(userId));            
 
             if (userInDb == null)
                 return NotFound();
+
 
             userInDb.LockoutEnd = date;
 
             _context.SaveChanges();
 
+            removeToursFromTourGuide(userId);
+
             return Ok();
 
+        }
+
+        public void removeToursFromTourGuide(string userId)
+        {
+            // First we get tours created by the Tour Guide that has yet to commence
+            var toursInDb = _context.Tours.Where(t => t.UserId.Equals(userId) && t.StartDate > DateTime.Now);
+
+
+            // We alert all affected users that has a booking with the upcoming tour
+            foreach (var tour in toursInDb)
+            {
+                var tourBookings = _context.Bookings.Where(b => b.TourId == tour.Id);
+
+                foreach(var booking in tourBookings)
+                {
+                    notifyAffectedUser(booking.UserId, tour.Name);
+                    _context.Remove(booking);
+
+                }
+
+                // Remove the Tour once all associated bookings are removed.
+                _context.Remove(tour);
+            }
+
+            _context.SaveChanges();
+
+
+            // Finally, get the remaining tours which have already been completed and remove them
+            var remainingTours = _context.Tours.Where(t => t.UserId.Equals(userId));
+            foreach (var tour in remainingTours)
+            {
+                var tourBookings = _context.Bookings.Where(b => b.TourId == tour.Id);
+
+                foreach(var booking in tourBookings)
+                {
+                    _context.Remove(booking);
+                }
+
+
+                _context.Remove(tour);
+            }
+
+            _context.SaveChanges();
+
+        }
+
+        public void notifyAffectedUser(string userId, string affectedTour)
+        {
+            var currAdmin = _userManager.GetUserId(HttpContext.User);
+
+            var message = new Message
+            {
+                UserToId = userId,
+                UserFromId = currAdmin,
+                DateSent = DateTime.Now,
+                Subject = "Suspension of Tour: " + affectedTour,
+                MessageBody = "Your booking to " + affectedTour + " has been cancelled as the Tour Guide has been suspended from the website."
+            };
+
+            _context.Add(message);
         }
 
     }
