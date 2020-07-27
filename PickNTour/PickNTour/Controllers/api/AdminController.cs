@@ -81,10 +81,23 @@ namespace PickNTour.Controllers.api
 
             userInDb.LockoutEnd = date;
 
-            _context.SaveChanges();     
+            _context.SaveChanges();
+
+            var userRoles = _context.UserRoles.Where(u => u.UserId == userId);
+
+            List<string> roles = new List<string>();
+
+            foreach (var role in userRoles)
+            {
+                var roleName = _context.Roles.SingleOrDefault(r => r.Id.Equals(role.RoleId));
+                roles.Add(roleName.Name);
+            }
             
-            removeToursFromTourGuide(userId);
-            removeBookingFromUser(userId, userInDb.UserName);
+            if(roles.Contains(UserRoles.UserTourGuide))
+                removeToursFromTourGuide(userId);
+
+            if(roles.Contains(UserRoles.User))
+                removeBookingFromUser(userId, userInDb.UserName);
 
             return Ok();
 
@@ -180,6 +193,7 @@ namespace PickNTour.Controllers.api
             }
 
             _context.SaveChanges();
+            
 
 
         }
