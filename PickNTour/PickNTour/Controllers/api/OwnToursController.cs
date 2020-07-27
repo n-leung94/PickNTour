@@ -108,15 +108,37 @@ namespace PickNTour.Controllers.api
 
         public void removeBookingsFromTour(int tourId)
         {
-            var bookings = _context.Bookings.Where(b => b.Tour.Id == tourId);
+            var bookings = _context.Bookings
+                .Include(b => b.User)
+                .Include(b => b.Tour)
+                .Where(b => b.Tour.Id == tourId);
 
             foreach(var booking in bookings)
             {
+                if(booking.Tour.StartDate > DateTime.Now)
+                    notifyAffectedUser(booking.UserId, booking.Tour.Name);
+
                 _context.Remove(booking);
             }
 
             _context.SaveChanges();
 
+        }
+
+        public void notifyAffectedUser(string userId, string affectedTour)
+        {
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
+            var message = new Message
+            {
+                UserToId = userId,
+                UserFromId = currUser,
+                DateSent = DateTime.Now,
+                Subject = "[AUTOMESSAGE] Cancellation of Tour: " + affectedTour,
+                MessageBody = "Your booking to " + affectedTour + " has been cancelled as the Tour Guide has cancelled the Tour."
+            };
+
+            _context.Add(message);
         }
     }
 
