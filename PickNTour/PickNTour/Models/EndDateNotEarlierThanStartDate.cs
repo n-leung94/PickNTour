@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using PickNTour.ViewModels;
 
 namespace PickNTour.Models
 {
@@ -10,7 +11,7 @@ namespace PickNTour.Models
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var tour = (Tour)validationContext.ObjectInstance;
+            var tour = (TourFormViewModel)validationContext.ObjectInstance;
 
             // If the Start Time and End Time is the same, reject.
             if (DateTime.Compare(tour.StartDate, tour.EndDate) == 0)

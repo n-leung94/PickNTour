@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using PickNTour.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using PickNTour.ViewModels;
+using AutoMapper;
 
 
 namespace PickNTour.Controllers
@@ -20,12 +21,14 @@ namespace PickNTour.Controllers
     {
         private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
         
 
-        public ToursController (ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ToursController (ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -93,14 +96,16 @@ namespace PickNTour.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRoles.UserTourGuide)]
-        public IActionResult Save(Tour tour)
+        public IActionResult Save(TourFormViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                var tourModel = new Tour();
+                var tourModel = new TourFormViewModel();
 
                 return View("TourForm", tourModel);
             }
+
+            var tour = _mapper.Map<TourFormViewModel, Tour>(viewModel);
 
             // Get the user incharge of creating the tour and associate it with the new tour
             var currUser = _userManager.GetUserId(HttpContext.User);
