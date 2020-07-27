@@ -81,9 +81,10 @@ namespace PickNTour.Controllers.api
 
             userInDb.LockoutEnd = date;
 
-            _context.SaveChanges();
-
+            _context.SaveChanges();     
+            
             removeToursFromTourGuide(userId);
+            removeBookingFromUser(userId, userInDb.UserName);
 
             return Ok();
 
@@ -148,6 +149,60 @@ namespace PickNTour.Controllers.api
 
             _context.Add(message);
         }
+
+        public void removeBookingFromUser(string userId, string userName)
+        {
+            // Find Upcoming Bookings associated with userId
+            var upcomingBookings = _context.Bookings.Include(b => b.Tour).Where(b => b.UserId.Equals(userId) && b.Tour.StartDate > DateTime.Now);
+
+            // For Each Upcoming Bookings, notify affected TourGuide
+            foreach (var booking in upcomingBookings)
+            {
+                notifyAffectedTourGuide(booking.Tour.UserId, userName, booking.Tour.Name);
+
+                // Find the respective upcoming tour and increment availability
+                var tour = _context.Tours.SingleOrDefault(t => t.Id == booking.TourId);
+                tour.TourAvailability += 1;
+
+                // Delete Booking
+                _context.Remove(booking);
+            }
+
+            _context.SaveChanges();
+
+
+            // Find remaining booking history from user and remove it.
+            var bookingHistory = _context.Bookings.Where(b => b.UserId.Equals(userId));
+
+            foreach(var booking in bookingHistory)
+            {
+                _context.Remove(booking);
+            }
+
+            _context.SaveChanges();
+
+
+        }
+
+        public void notifyAffectedTourGuide(string userId, string lockedOutUser,string affectedTour)
+        {
+            var currAdmin = _userManager.GetUserId(HttpContext.User);
+
+            var message = new Message
+            {
+                UserToId = userId,
+                UserFromId = currAdmin,
+                DateSent = DateTime.Now,
+                Subject = "Removal of Booking for: " + affectedTour,
+                MessageBody = "The following Tour Participant " + lockedOutUser + " has been locked out from the site by an administrator and hence, their booking has been removed from the tour."
+            };
+
+            _context.Add(message);
+        }
+
+
+
+
 
     }
 }
