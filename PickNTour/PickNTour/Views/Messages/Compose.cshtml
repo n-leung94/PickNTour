@@ -15,7 +15,8 @@
 
     <div class="form-group">
         <label asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" />
+        <br/>
+        <input asp-for="UserName" id="UserName" name="UserName" class="form-control" />
         <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
 
@@ -40,4 +41,34 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+
+
+            var users = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/userquery/queryuser/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#UserName').typeahead({
+                minLength: 3,
+                highlight: true
+            }, {
+                name: 'users',
+                display: 'userName',
+                source: users
+            }).on("typeahead:select", function (event, user) {
+                $('#UserName').text = user.userName;
+            });
+
+
+
+        });
+    </script>
+
 }
