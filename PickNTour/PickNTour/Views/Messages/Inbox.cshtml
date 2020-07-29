@@ -1,4 +1,6 @@
 ﻿
+@model PickNTour.ViewModels.MessageOutcomeViewModel
+
 @{
     ViewData["Title"] = "Inbox";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,6 +9,22 @@
 <h1>My Inbox</h1>
 
 <div>
+    @{
+        if (Model.outcome.Equals("success"))
+        {
+            <div class="alert alert-success">
+                <strong>Success!</strong> Your Message has been sent!
+            </div>
+        }
+
+        else if (Model.outcome.Equals("notfound"))
+        {
+            <div class="alert alert-danger">
+                <strong>Error!</strong> The Username you are attempting to send to does not exist!
+            </div>
+        }
+    }
+
     <table id="inbox" class="table table-bordered table-hover">
         <thead>
             <tr>

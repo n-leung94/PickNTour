@@ -91,7 +91,7 @@ namespace PickNTour.Controllers
 
 
 
-            return RedirectToAction("Inbox", "Messages");
+            return Redirect("/messages/inbox/success");
         }
     }
 }

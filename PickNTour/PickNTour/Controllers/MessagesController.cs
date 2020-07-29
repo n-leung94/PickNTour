@@ -25,10 +25,18 @@ namespace PickNTour.Controllers
             _userManager = userManager;
         }
 
-
-        public IActionResult Inbox()
+        [Route("messages/inbox/{result}")]
+        [Route("messages/inbox/")]
+        public IActionResult Inbox(string result)
         {
-            return View();
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                var outcomevm = new MessageOutcomeViewModel {outcome = result };               
+                return View(outcomevm);
+            }
+
+
+            return View(new MessageOutcomeViewModel { outcome = "" });
         }
 
         [Route("messages/compose/{UserName}")]
@@ -60,7 +68,7 @@ namespace PickNTour.Controllers
             var recipientInDb = _context.Users.SingleOrDefault(u => u.UserName == viewModel.UserName);
 
             if (recipientInDb == null)
-                return NotFound("The Username you are attempting to send a message to, does not exist");
+                return Redirect("/messages/inbox/notfound");
 
             var currUser = _userManager.GetUserId(HttpContext.User);
 
@@ -76,7 +84,7 @@ namespace PickNTour.Controllers
             _context.Add(newMessage);
             _context.SaveChanges();
 
-            return RedirectToAction("Compose", "Messages");
+            return Redirect("/messages/inbox/success");
         }
     }
 }
