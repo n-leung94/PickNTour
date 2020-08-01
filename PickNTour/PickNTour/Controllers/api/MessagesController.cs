@@ -52,6 +52,35 @@ namespace PickNTour.Controllers.api
 
         }
 
+        [HttpPut("{id}")]
+        public IActionResult ReadMessage(int id)
+        {
+            // Check if the request was sent by the original user
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
+            var messageInDb = _context.Messages.SingleOrDefault(m => m.Id == id);
+
+            if (messageInDb == null)
+                return NotFound();
+
+            if (!messageInDb.UserToId.Equals(currUser))
+                return BadRequest();
+
+            // If checks are passed, check to see if there's already an existing timestamp as we only need the earliest.
+            if (messageInDb.DateRead != null)
+                return Ok();
+
+
+            // Otherwise we do a one time registration of timestamp read.
+            messageInDb.DateRead = DateTime.Now;
+            _context.SaveChanges();
+
+            return Ok();
+
+
+        }
+
+
         [HttpDelete("{id}")]
         public IActionResult DeleteMessage(int id)
         {

@@ -60,8 +60,8 @@
                     },
                     {
                         data: "messageBody",
-                        render: function (data) {
-                            return "<button class='btn-link js-viewmsg' data-msg='" + data + "'>View Message</button>"
+                        render: function (data, type, row) {
+                            return "<button class='btn-link js-viewmsg' data-msg='" + data + "' data-id='" + row.id + "'>View Message</button>"
                         }
                     },
                     {
@@ -114,6 +114,14 @@
                 var viewMsgBtn = $(this);
 
                 bootbox.alert(viewMsgBtn.attr("data-msg"));
+
+                $.ajax({
+                    url: "/api/messages/readmessage/" + viewMsgBtn.attr("data-id"),
+                    method: "PUT",
+                    success: function () {
+                    }
+
+                });
 
             });
 
