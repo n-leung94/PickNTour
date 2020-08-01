@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewData["Title"] = "PublicHome";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "UserHome";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h1 style="color:white">Pick N Tour</h1>
+    <p class="lead" style="color:white">Start planning your next trip with us !</p>
+    <p><a href="/Identity/Account/Register" class="btn btn-primary btn-lg">Register an Account For Free ! &raquo;</a></p>
+</div>
+
+<h1 style="text-align:center;"> Latest Tours </h1>
+<hr />
+<br />
+
+<div id="tours"></div>
+<br/>
+
+<div class="alert alert-info">
+    <h4 style="text-align:center;"> <strong>Register</strong> now to start booking ! </h4>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/home/getpublicstats',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+
+                    //The element where the tours should be appended
+                    var el = $('#tours');
+
+                    //Empty the element first
+                    el.empty();
+
+
+                    var itemCount = 0;
+                    var cardBuilder = "";
+
+                    $.each(data, function (index, value) {
+                        if (itemCount == 0) {
+                            var tagOpen = "<div class='card-deck'>"
+                            cardBuilder += tagOpen;
+                        }
+
+                        cardBuilder += (
+
+                            '<div class="card" style="width:400px">' +
+                                '<img class="card-img-top" src="/images/travel.jpg">' +
+                                '<div class="card-body">' +
+                                    '<h5 class="card-title">' + value.name + '</h5>' +
+                                    '<p class="card-text">' + value.country + '</p>' + '<hr/>' +
+                                    '<p class="card-text">' + value.description + '</p>' + '<hr/>' +
+                                    '<p class="card-text">Start Date: ' + moment(value.startDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
+                                    '<p class="card-text">End Date: ' + moment(value.endDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
+                                    '<p class="card-text">Price: $' + value.price + "</p>" +
+                                    '<p class="card-text">Slots Remaining: ' + value.tourAvailability + "</p>" + '<hr/>' +
+                                    '<p class="card-text">POC: ' + value.user.userName + "</p>" +
+                                '</div>' +
+                            '</div>'
+                        );
+
+                        itemCount += 1;
+
+                        if (itemCount >= 3) {
+                            var tagClose = "</div> <hr/>"
+                            cardBuilder += tagClose;
+                            itemCount = 0;
+                        }
+
+                    });
+
+                    el.append(cardBuilder);
+                },
+                error: function () {
+                    console.log('Error Encountered');
+                }
+            });
+
+
+
+        });
+
+
+
+    </script>
+}
+

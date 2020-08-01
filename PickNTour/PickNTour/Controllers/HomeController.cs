@@ -37,7 +37,7 @@ namespace PickNTour.Controllers
                 return View("UserHome");
             }
 
-            return View();
+            return View("PublicHome");
         }
 
         public IActionResult Privacy()

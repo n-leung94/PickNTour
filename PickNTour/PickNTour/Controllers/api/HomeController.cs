@@ -32,6 +32,7 @@ namespace PickNTour.Controllers.api
         }
 
 
+        // For Authenticated User Home Page
         [HttpGet]
         [Authorize(Roles = UserRoles.User)]
         public IActionResult GetUserStats()
@@ -62,6 +63,22 @@ namespace PickNTour.Controllers.api
 
             return Ok(userStatsDto);
 
+        }
+
+        // For Unauthenticated User Home Page
+        [HttpGet]
+        public IActionResult GetPublicStats()
+        {
+            // We will implicitly return the 3 tours that are starting soon
+
+            var latestTours = _context.Tours.Include(t => t.User)
+                .Where(t => t.StartDate > DateTime.Now)
+                .OrderBy(t => t.StartDate)
+                .Take(3);
+
+            var publicTourDto = latestTours.ToList().Select(_mapper.Map<Tour, PublicTourDto>);
+
+            return Ok(publicTourDto);
         }
 
     }
