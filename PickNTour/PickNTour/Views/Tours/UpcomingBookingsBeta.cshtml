@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "UpcomingToursBeta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Your Upcoming Tours Beta</h1>
+
+<div id="bookings"></div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/bookedtours/getupcomingbookings',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data); 
+
+                    //The element where the tours should be appended
+                    var el = $('#bookings');
+
+                    //Empty the element first
+                    el.empty();
+
+                   
+                    var itemCount = 0;
+                    var cardBuilder = "";
+
+                    $.each(data, function(index, value) {
+                        if (itemCount == 0) {
+                            var tagOpen = "<div class='card-deck'>"
+                            cardBuilder += tagOpen;
+                        }
+                        
+                        cardBuilder += (
+                            
+                            '<div class="card" style="width:400px">' +
+                                    '<img class="card-img-top" src="/images/travel.jpg">' +
+                                    '<div class="card-body">' +
+                                        '<h5 class="card-title">' + value.tour.name + '</h5>' +
+                                        '<p class="card-text">' + value.tour.country + '</p>' + '<hr/>' +  
+                                        '<p class="card-text">Start Location: ' + value.tour.startLocation + "</p>" +
+                                        '<p class="card-text">End Location: ' + value.tour.endLocation + "</p>" + '<hr/>' +
+                                        '<p class="card-text">Start Date: ' + moment(value.tour.startDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
+                                        '<p class="card-text">End Date: ' + moment(value.tour.endDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" + 
+                                        '<p class="card-text">Date Booked: ' + moment(value.dateBooked).format('MMMM Do YYYY, h:mm:ss a') + "</p>" + '<hr/>' +
+                                        '<p class="card-text">Price: $' + value.tour.price + "</p>" +
+                                        '<p class="card-text">POC: ' + value.tour.user.userName + "</p>" +
+                                        '<p class="card-text">Tour Guide Name: ' + value.tour.user.fullName + "</p>" +
+                                    '</div>' +
+                                    '<div class="card-footer">' +
+                                        "<a href='/messages/compose/" + value.tour.user.userName + "' class='btn btn-outline-primary' style='margin:5px;' role='button'>Message Tour Guide</a>" +                                       
+                                        "<a href='/tours/details/" + value.tour.id + "' class='btn btn-outline-info' style='margin:5px;' role='button'>View Details</a>" +
+                                        "<button class='btn btn-outline-danger js-cancel' style='margin:5px;' data-booking-id=" + value.id + ">Cancel Booking</button>" +
+                                    '</div>' +
+                                '</div>' 
+                        );
+
+                        itemCount += 1;
+
+                        if (itemCount >= 3) {
+                            var tagClose = "</div> <hr/>"                               
+                            cardBuilder += tagClose;
+                            itemCount = 0;
+                        }
+                                              
+                    });
+
+                    el.append(cardBuilder);
+                },
+                error: function() {
+                    console.log('Error Encountered');
+                }
+            });
+
+
+            $("#bookings").on("click", ".js-cancel", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to cancel this booking?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/tours/" + button.attr("data-booking-id"),
+                            method: "DELETE",
+                            success: function (response) {
+                                toastr.success("Successfully cancelled the booking!");
+                                button.parentsUntil('.card-deck').remove();                      
+                            },
+                            fail: function () {
+                            toastr.error("Error: Something unexpected happened.");
+                             }
+
+                        });
+                    }
+
+                });
+
+            });
+
+
+        });
+
+
+
+    </script>
+}

@@ -45,7 +45,7 @@ namespace PickNTour.Controllers
         [Authorize(Roles = UserRoles.User)]
         public IActionResult UpcomingBookings()
         {
-            return View();
+            return View("upcomingbookingsbeta");
         }
 
         [Authorize(Roles = UserRoles.User)]

@@ -161,3 +161,4 @@ C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreap
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Home\UserHome.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Home\PublicHome.cshtml.g.cs
 C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Home\TourGuideHome.cshtml.g.cs
+C:\Users\Nick\Documents\GitHub\PickNTour\PickNTour\PickNTour\obj\Debug\netcoreapp3.0\Razor\Views\Tours\UpcomingBookingsBeta.cshtml.g.cs
