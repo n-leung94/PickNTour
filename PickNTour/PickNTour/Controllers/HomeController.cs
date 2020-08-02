@@ -37,6 +37,11 @@ namespace PickNTour.Controllers
                 return View("UserHome");
             }
 
+            if (role.Equals("tourguide"))
+            {
+                return View("TourGuideHome");
+            }
+
             return View("PublicHome");
         }
 

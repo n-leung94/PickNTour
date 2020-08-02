@@ -81,6 +81,35 @@ namespace PickNTour.Controllers.api
             return Ok(publicTourDto);
         }
 
+        // For Tour Guide User Home Page
+        [HttpGet]
+        public IActionResult GetTourGuideStats()
+        {
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
+            var unreadMessages = _context.Messages
+                .Where(m => m.UserToId.Equals(currUser) && m.DateRead == null)
+                .Count();
+
+            var upcomingTours = _context.Tours
+                .Where(t => t.UserId.Equals(currUser) && t.StartDate > DateTime.Now)
+                .Count();
+
+            var completedTours = _context.Tours.
+                Where(t => t.UserId.Equals(currUser) && t.StartDate < DateTime.Now)
+                .Count();
+
+            var tourGuideStatsDto = new TourGuideStatsDto
+            {
+                unreadMessages = unreadMessages,
+                upcomingTours = upcomingTours,
+                completedTours = completedTours
+            };
+
+            return Ok(tourGuideStatsDto);
+        }
+
+
     }
 
 

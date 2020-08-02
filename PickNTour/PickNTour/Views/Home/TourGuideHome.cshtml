@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "TourGuide Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h1 style="color:white">Pick N Tour</h1>
+    <p class="lead" style="color:white">Start promoting your next tour with us !</p>
+    <p><a href="/tours/availabletours" class="btn btn-primary btn-lg">Create Tour &raquo;</a></p>
+</div>
+
+<h1 style="text-align:center;"> User Summary </h1> <hr/><br/>
+
+<div id="stats">
+    <div class="card-deck">
+        <div class="card" style="width:400px">
+            <img class="card-img-top"  src="/images/inbox.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Unread Messages</h5>  <hr />
+                <h1 class="card-text" style="text-align:center;" id="msgCount"></h1>
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <a href='/messages/inbox/' class='btn btn-outline-info' role='button'> View Inbox</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/plane.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Upcoming Tours</h5><hr />
+                <h1 class="card-text" style="text-align:center;" id="upcomingCount"></h1>  
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <a href='/tours/createdtours/' class='btn btn-outline-info' role='button'> View Own Tours</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/checkbox.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Completed Tours</h5><hr />
+                <h1 class="card-text" style="text-align:center;" id="completedCount"></h1>  
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <a href='/tours/createdtours/' class='btn btn-outline-info' role='button'>View Own Tours</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/home/gettourguidestats',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    $("#msgCount").html(data.unreadMessages);
+                    $("#upcomingCount").html(data.upcomingTours);
+                    $("#completedCount").html(data.completedTours);
+                },
+                error: function() {
+                    console.log('Error Encountered');
+                }
+            });
+
+
+
+        });
+
+
+
+    </script>
+}
