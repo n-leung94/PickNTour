@@ -37,7 +37,7 @@ namespace PickNTour.Controllers.api
             // Return list of tours that hasn't started yet.
 
             var availableTours = _context.Tours
-                                    .Where(t => t.StartDate >= DateTime.Now)
+                                    .Where(t => t.StartDate >= DateTime.Now && t.TourAvailability > 0)
                                     .Include(t => t.User);
 
 
@@ -56,6 +56,9 @@ namespace PickNTour.Controllers.api
 
             if (tourInDb == null)
                 return NotFound();
+
+            if (tourInDb.TourAvailability <= 0)
+                return BadRequest("The Tour is fully booked!");
 
 
             // If Tour exists, get current user and create a booking.

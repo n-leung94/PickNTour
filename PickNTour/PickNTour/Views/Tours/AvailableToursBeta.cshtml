@@ -84,9 +84,9 @@
                             success: function (response) {
                                 toastr.success("Successfully booked the tour!");
                             },
-                            fail: function () {
-                            toastr.error("Error: Something unexpected happened.");
-                             }
+                            error: function (xhr, status, error) {
+                                toastr.error(xhr.responseText);
+                            }
 
                         });
                     }
