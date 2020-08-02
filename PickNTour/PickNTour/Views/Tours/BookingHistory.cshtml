@@ -45,7 +45,10 @@
                         }
                     },
                     {
-                        data: "tour.description"
+                        data: "tour.description",
+                        render: function (data) {
+                            return "<button class='btn-link js-viewdesc' data-desc='" + data + "'>View Description</button>"
+                        }
                     },
                     {
                         data: "tour.user.fullName"
@@ -75,6 +78,12 @@
 
                 ]
 
+
+            });
+
+            $("#bookings").on("click", ".js-viewdesc", function () {
+                var viewDescBtn = $(this);
+                bootbox.alert(viewDescBtn.attr("data-desc"));
 
             });
 

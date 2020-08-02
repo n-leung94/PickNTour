@@ -62,7 +62,10 @@
                         }
                     },
                     {
-                        data: "description"
+                        data: "description",
+                        render: function (data) {
+                            return "<button class='btn-link js-viewdesc' data-desc='" + data + "'>View Description</button>"
+                        }
                     },
                     {
                         data:"country"
@@ -125,6 +128,13 @@
                 });
 
             });
+
+            $("#tours").on("click", ".js-viewdesc", function () {
+                var viewDescBtn = $(this);
+                bootbox.alert(viewDescBtn.attr("data-desc"));
+
+            });
+
 
             $("#tours").on("click", ".js-viewusers", function () {
                 var button = $(this);
