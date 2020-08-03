@@ -54,6 +54,13 @@ namespace PickNTour.Controllers
             return View();
         }
 
+        [Route("/tours/details/{id}")]
+        public IActionResult Details(int id)
+        {
+            ViewData["tourID"] = id;
+            return View();
+        }
+
 
 
 

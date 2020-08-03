@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewData["Title"] = "Tour Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h1 style="color:white" id="tourName"></h1>
+    <p class="lead" style="color:white" id="tourCountry"></p>
+</div>
+
+<h1 style="text-align:center;"> Tour Details </h1> <hr/><br/>
+
+<div id="details">
+    <div class="card-deck">
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/calendar.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Timing</h5>  <hr />
+                <p class="card-text" style="text-align:center;" id="startDate">Start Date: </p>
+                <p class="card-text" style="text-align:center;" id="endDate">End Date: </p>
+            </div>
+        </div>
+
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/location.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Location</h5><hr />
+                <p class="card-text" style="text-align:center;" id="startLocation">Start Location: </p>
+                <p class="card-text" style="text-align:center;" id="endLocation">End Location: </p>
+            </div>
+        </div>
+
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/tour-guide.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Tour Guide</h5><hr />
+                <p class="card-text" style="text-align:center;" id="userName">UserName :</p>
+                <p class="card-text" style="text-align:center;" id="fullName">Full Name :</p>
+            </div>
+        </div>
+
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="/images/description.png">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align:center;">Description</h5><hr />
+                <p class="card-text" style="text-align:center;" id="description"></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var id = @ViewData["tourID"];
+
+            $.ajax({
+                url: '/api/tours/' + id,
+                dataType: 'json',
+                success: function (data) {
+                    $("#tourName").html(data.name);
+                    $("#tourCountry").html(data.country);
+                    $("#startDate").html("<strong>" + "Start Date" + "</strong> <br/>" + moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'));
+                    $("#endDate").html("<strong>" + "End Date" + "</strong> <br/>" + moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'));
+                    $("#startLocation").html("<strong>" + "Start Location" + "</strong> <br/>" + data.startLocation);
+                    $("#endLocation").html("<strong>" + "End Location" + "</strong> <br/>" + data.endLocation);
+                    $("#userName").html("<strong>" + "User Name" + "</strong> <br/>" + data.user.userName);
+                    $("#fullName").html("<strong>" + "Full Name" + "</strong> <br/>" + data.user.fullName);
+                    $("#description").html(data.description);
+                },
+                error: function() {
+                    console.log('Error Encountered');
+                }
+            });
+
+
+
+        });
+
+
+
+    </script>
+}

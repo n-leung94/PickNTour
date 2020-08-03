@@ -47,6 +47,22 @@ namespace PickNTour.Controllers.api
 
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetTourDetails(int id)
+        {
+            var tourInDb = _context.Tours
+                .Include(t => t.User)
+                .SingleOrDefault(t => t.Id == id);
+
+            if (tourInDb == null)
+                return NotFound();
+
+            var publicTourDto = _mapper.Map<Tour, PublicTourDto>(tourInDb);
+
+
+            return Ok(publicTourDto);
+        }
+
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}")]
         public IActionResult BookTour(int id)
