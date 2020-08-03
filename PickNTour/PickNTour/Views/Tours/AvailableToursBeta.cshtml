@@ -4,7 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Available Tours Beta</h1>
+<h1 style="text-align:center;">Available Tours</h1>
+<hr />
+<br />
 
 <div id="tours"></div>
 
@@ -16,8 +18,8 @@
             $.ajax({
                 url: '/api/tours',
                 dataType: 'json',
-                success: function(data) {
-                    console.log(data); 
+                success: function (data) {
+                    console.log(data);
 
                     //The element where the tours should be appended
                     var el = $('#tours');
@@ -25,50 +27,50 @@
                     //Empty the element first
                     el.empty();
 
-                   
+
                     var itemCount = 0;
                     var cardBuilder = "";
 
-                    $.each(data, function(index, value) {
+                    $.each(data, function (index, value) {
                         if (itemCount == 0) {
                             var tagOpen = "<div class='card-deck'>"
                             cardBuilder += tagOpen;
                         }
-                        
+
                         cardBuilder += (
-                            
+
                             '<div class="card" style="width:400px">' +
-                                    '<img class="card-img-top" src="/images/travel.jpg">' +
-                                    '<div class="card-body">' +
-                                        '<h5 class="card-title">' + value.name + '</h5>' +
-                                        '<p class="card-text">' + value.country + '</p>' +  '<hr/>' +
-                                        '<p class="card-text">' + value.description + '</p>' + '<hr/>' +                                         
-                                        '<p class="card-text">Start Date: ' + moment(value.startDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
-                                        '<p class="card-text">End Date: ' + moment(value.endDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
-                                        '<p class="card-text">Price: $' + value.price + "</p>" +
-                                        '<p class="card-text">Slots Remaining: ' + value.tourAvailability + "</p>" + '<hr/>' +
-                                        '<p class="card-text">POC: ' + value.user.userName + "</p>" +
-                                    '</div>' +
-                                    '<div class="card-footer">' +
-                                        "<button class='btn btn-outline-primary js-book' style='margin:5px;' data-tour-id=" + value.id + ">Book</button>" +
-                                        "<a href='/tours/details/" + value.id + "' class='btn btn-outline-info' role='button'> View Details</a>" +
-                                    '</div>' +
-                                '</div>' 
+                            '<img class="card-img-top" src="/images/travel.jpg">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">' + value.name + '</h5>' +
+                            '<p class="card-text">' + value.country + '</p>' + '<hr/>' +
+                            '<p class="card-text">' + value.description + '</p>' + '<hr/>' +
+                            '<p class="card-text">Start Date: ' + moment(value.startDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
+                            '<p class="card-text">End Date: ' + moment(value.endDate).format('MMMM Do YYYY, h:mm:ss a') + "</p>" +
+                            '<p class="card-text">Price: $' + value.price + "</p>" +
+                            '<p class="card-text">Slots Remaining: ' + value.tourAvailability + "</p>" + '<hr/>' +
+                            '<p class="card-text">POC: ' + value.user.userName + "</p>" +
+                            '</div>' +
+                            '<div class="card-footer">' +
+                            "<button class='btn btn-outline-primary js-book' style='margin:5px;' data-tour-id=" + value.id + ">Book</button>" +
+                            "<a href='/tours/details/" + value.id + "' class='btn btn-outline-info' role='button'> View Details</a>" +
+                            '</div>' +
+                            '</div>'
                         );
 
                         itemCount += 1;
 
                         if (itemCount >= 3) {
-                            var tagClose = "</div> <hr/>"                               
+                            var tagClose = "</div> <hr/>"
                             cardBuilder += tagClose;
                             itemCount = 0;
                         }
-                                              
+
                     });
 
                     el.append(cardBuilder);
                 },
-                error: function() {
+                error: function () {
                     console.log('Error Encountered');
                 }
             });

@@ -4,8 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Booking History</h1>
-<p>Here, you can view the list of previous bookings you have made that have been fufilled!</p>
+<h1 style="text-align:center;">My Booking History</h1>
+<hr />
+<br />
 
 <div>
     <table id="bookings" class="table table-bordered table-hover">
@@ -47,7 +48,7 @@
                     {
                         data: "tour.description",
                         render: function (data) {
-                            return "<button class='btn-link js-viewdesc' data-desc='" + data + "'>View Description</button>"
+                            return "<button class='btn btn-outline-primary js-viewdesc' data-desc='" + data + "'>View Description</button>"
                         }
                     },
                     {
@@ -63,16 +64,25 @@
                         data: "tour.endLocation"
                     },
                     {
-                        data: "tour.startDate"
+                        data: "tour.startDate",
+                        render: function (data) {
+                            return moment(data).format('MMMM Do YYYY, h:mm:ss a')
+                        }
                     },
                     {
-                        data: "tour.endDate"
+                        data: "tour.endDate",
+                        render: function (data) {
+                            return moment(data).format('MMMM Do YYYY, h:mm:ss a')
+                        }
                     },
                     {
                         data: "tour.price"
                     },
                     {
-                        data: "dateBooked"
+                        data: "dateBooked",
+                        render: function (data) {
+                            return moment(data).format('MMMM Do YYYY, h:mm:ss a')
+                        }
                     }
 
 
