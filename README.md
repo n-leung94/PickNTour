@@ -11,10 +11,19 @@ Conceptual On-Demand Tour Booking system which features:
 Development Platform & Languages:
 * ASP.NET Core 3.0 MVC
 * Entity Framework Focused
+* RESTful APIs Included
 * C#
 * CSHTML
 * Javascript
 * AJAX
+
+External Plugins Used:
+* Microsoft AutoMapper
+* Twitter Typeahead.JS
+* Datatables.JS
+* Bootbox.JS
+* Toastr.JS
+* Moment.JS
 
 *Feel free to look at PickNTour App Images Folder to see images of all the current features!*
 
