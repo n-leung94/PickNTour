@@ -31,22 +31,25 @@ namespace PickNTour.Controllers.api
             _mapper = mapper;
         }
 
+        // Return list of tours that hasn't started yet
         [HttpGet]
-        public IEnumerable<PublicTourDto> GetAvailableTours()
+        public IActionResult GetAvailableTours()
         {
-            // Return list of tours that hasn't started yet.
-
+            
             var availableTours = _context.Tours
                                     .Where(t => t.StartDate >= DateTime.Now && t.TourAvailability > 0)
                                     .Include(t => t.User);
 
 
-            return availableTours
+            var publicTourDto = availableTours
                     .ToList()
                     .Select(_mapper.Map<Tour, PublicTourDto>);
 
+            return Ok(publicTourDto);
+
         }
 
+        // Return all details modelled after PublicTourDto based on specified tour ID
         [HttpGet("{id}")]
         public IActionResult GetTourDetails(int id)
         {
@@ -63,6 +66,7 @@ namespace PickNTour.Controllers.api
             return Ok(publicTourDto);
         }
 
+        // Books a tour based on the tourId for the current session user
         [Authorize(Roles = UserRoles.User)]
         [HttpPost("{id}")]
         public IActionResult BookTour(int id)
@@ -99,6 +103,7 @@ namespace PickNTour.Controllers.api
             return Ok();
         }
 
+        // Cancels a booking to an upcoming tour based on tourId for the current session user.
         [Authorize(Roles = UserRoles.User)]
         [HttpDelete("{id}")]
         public IActionResult CancelBooking(int id)

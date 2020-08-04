@@ -31,8 +31,9 @@ namespace PickNTour.Controllers.api
             _mapper = mapper;
         }
 
+        // Returns all upcoming bookings to a tour that has yet to start for the current session user.
         [HttpGet]
-        public IEnumerable<BookingDto> GetUpcomingBookings()
+        public IActionResult GetUpcomingBookings()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);
             var bookings = _context.Bookings.Where(b => b.UserId.Equals(currUser) && b.Tour.StartDate >= DateTime.Now)
@@ -42,12 +43,13 @@ namespace PickNTour.Controllers.api
             var bookingDto = bookings.ToList()
                                .Select(_mapper.Map<Booking, BookingDto>);
 
-            return bookingDto;
+            return Ok(bookingDto);
                      
         }
 
+        // Returns all bookings to a tour that has completed for the current session user.
         [HttpGet]
-        public IEnumerable<BookingDto> GetBookingHistory()
+        public IActionResult GetBookingHistory()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);
             var bookings = _context.Bookings.Where(b => b.UserId.Equals(currUser) && b.Tour.StartDate < DateTime.Now)
@@ -57,7 +59,7 @@ namespace PickNTour.Controllers.api
             var bookingDto = bookings.ToList()
                                .Select(_mapper.Map<Booking, BookingDto>);
 
-            return bookingDto;
+            return Ok(bookingDto);
 
         }
 

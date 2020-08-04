@@ -34,8 +34,9 @@ namespace PickNTour.Controllers.api
         }
 
 
+        // Returns all messages addressed to the current session user
         [HttpGet]
-        public IEnumerable<ReadMessageDto> GetReceivedMessages ()
+        public IActionResult GetReceivedMessages ()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);
 
@@ -47,11 +48,12 @@ namespace PickNTour.Controllers.api
                 .ToList()
                 .Select(_mapper.Map<Message, ReadMessageDto>);
 
-            return readMessageDto;
+            return Ok(readMessageDto);
 
 
         }
 
+        // Marks a message based on ID, as read when the current session user clicks on the view message button to see the message contents.
         [HttpPut("{id}")]
         public IActionResult ReadMessage(int id)
         {
@@ -80,14 +82,20 @@ namespace PickNTour.Controllers.api
 
         }
 
-
+        // Deletes a message based on Id
         [HttpDelete("{id}")]
         public IActionResult DeleteMessage(int id)
         {
+            // Check if the request was sent by the original user
+            var currUser = _userManager.GetUserId(HttpContext.User);
+
             var messageInDb = _context.Messages.SingleOrDefault(m => m.Id == id);
 
             if (messageInDb == null)
                 return NotFound();
+
+            if (!messageInDb.UserToId.Equals(currUser))
+                return BadRequest();
 
             _context.Remove(messageInDb);
             _context.SaveChanges();

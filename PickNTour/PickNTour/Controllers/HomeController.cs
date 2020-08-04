@@ -42,6 +42,11 @@ namespace PickNTour.Controllers
                 return View("TourGuideHome");
             }
 
+            if (role.Equals("admin"))
+            {
+                return View("Index");
+            }
+
             return View("PublicHome");
         }
 
@@ -56,7 +61,7 @@ namespace PickNTour.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
+        // Local method to find any AspNetRoles that the current session user is in to display the appriopriate home page based on their role.
         public string getCurrentUserRole()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);

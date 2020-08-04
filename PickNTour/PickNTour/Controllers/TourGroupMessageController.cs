@@ -31,7 +31,7 @@ namespace PickNTour.Controllers
             _mapper = mapper;
         }
 
-
+        // For tour guides to message their tourgroup based on the tourId
         [Route("tourgroupmessage/compose/{tourId}")]
         public IActionResult MessageTourGroup(int tourId)
         {
@@ -66,6 +66,7 @@ namespace PickNTour.Controllers
             return View(viewModel);
         }
 
+        // Method to handle the message tour group form that will be sent to all recipients of the tour.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Send (MessageTGViewModel viewModel)

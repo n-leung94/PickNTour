@@ -71,7 +71,6 @@
                 url: '/api/home/getuserstats',
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     $("#msgCount").html(data.unreadMessages);
                     $("#upcomingCount").html(data.upcomingBookings);
                     $("#completedCount").html(data.completedBookings);

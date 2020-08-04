@@ -29,7 +29,7 @@ namespace PickNTour.Controllers.api
             _mapper = mapper;
         }
 
-
+        // User query for AutoComplete feature when typing a username to send to in Compose Message
         [HttpGet("{query}")]
         public IActionResult QueryUser(string query)
         {

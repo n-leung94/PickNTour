@@ -31,29 +31,29 @@ namespace PickNTour.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        // Returns all upcoming tours to a user
         [Authorize(Roles = UserRoles.User)]
         public IActionResult AvailableTours()
         {
             return View("availabletoursbeta");
         }
 
+        // Returns all of the users bookings to a tour that has yet to start
         [Authorize(Roles = UserRoles.User)]
         public IActionResult UpcomingBookings()
         {
             return View("upcomingbookingsbeta");
         }
 
+
+        // Returns all of the users bookings to tours that has completed
         [Authorize(Roles = UserRoles.User)]
         public IActionResult BookingHistory()
         {
             return View();
         }
 
+        // Returns the details of a particular tour by Id
         [Route("/tours/details/{id}")]
         public IActionResult Details(int id)
         {
@@ -63,7 +63,7 @@ namespace PickNTour.Controllers
 
 
 
-
+        // Returns a form for tour guide users to create a new tour
         [Authorize(Roles = UserRoles.UserTourGuide)]
         public IActionResult Create()
         {
@@ -77,6 +77,7 @@ namespace PickNTour.Controllers
             return View("TourForm", tourModel);
         }
 
+        // Returns a form with existing details of a tour filled in for tour guide users to edit an existing tour.
         [Authorize(Roles = UserRoles.UserTourGuide)]
         public IActionResult Edit(int id)
         {
@@ -100,6 +101,7 @@ namespace PickNTour.Controllers
 
         }
 
+        // Save changes to an edited tour form or registers a new tour
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRoles.UserTourGuide)]
@@ -162,6 +164,8 @@ namespace PickNTour.Controllers
             return RedirectToAction("CreatedTours", "Tours");
         }
 
+        // Returns a table of created tours for a tourguide user
+        [Authorize(Roles = UserRoles.UserTourGuide)]
         public IActionResult CreatedTours()
         {
             return View();

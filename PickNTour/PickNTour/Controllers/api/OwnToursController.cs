@@ -32,9 +32,9 @@ namespace PickNTour.Controllers.api
             _Mapper = mapper;
         }
 
-
+        // Returns all created tours of the current session tour guide.
         [HttpGet]
-        public IEnumerable<TourDto> GetAllTours()
+        public IActionResult GetAllTours()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);
             var tours = _context.Tours.Where(t => t.UserId.Equals(currUser));
@@ -42,10 +42,11 @@ namespace PickNTour.Controllers.api
                 .ToList()
                 .Select(_Mapper.Map<Tour, TourDto>);
 
-            return (tourDto);
+            return Ok(tourDto);
 
         }
 
+        // Returns all participants based on the bookings made to a particular tour by the tourID
         [HttpGet("{tourId}")]
         [Route("tourparticipants/{tourId}")]
         public IActionResult GetTourParticipants(int tourId)
@@ -75,7 +76,7 @@ namespace PickNTour.Controllers.api
                                
         }
         
-
+        // Deletes a tour based on the specified tourID
         [HttpDelete("{id}")]
         public IActionResult DeleteTour(int id)
         {
@@ -106,6 +107,7 @@ namespace PickNTour.Controllers.api
 
         }
 
+        // Remove any booking entries in the DB to a tour that is about to be deleted.
         public void removeBookingsFromTour(int tourId)
         {
             var bookings = _context.Bookings
@@ -125,6 +127,7 @@ namespace PickNTour.Controllers.api
 
         }
 
+        // Notifies user of affected bookings to an upcoming tour that the tour has been cancelled.
         public void notifyAffectedUser(string userId, string affectedTour)
         {
             var currUser = _userManager.GetUserId(HttpContext.User);

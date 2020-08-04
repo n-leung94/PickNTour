@@ -25,6 +25,7 @@ namespace PickNTour.Controllers
             _userManager = userManager;
         }
 
+        // For users to read their messages and also view the outcome of sending a message based on the routing from Send method.
         [Route("messages/inbox/{result}")]
         [Route("messages/inbox/")]
         public IActionResult Inbox(string result)
@@ -39,6 +40,7 @@ namespace PickNTour.Controllers
             return View(new MessageOutcomeViewModel { outcome = "" });
         }
 
+        // For users to compose a message, or to compose a message to a pre-filled recipient if they were routed from an action.
         [Route("messages/compose/{UserName}")]
         [Route("messages/compose/")]
         public IActionResult Compose(string UserName)
@@ -61,6 +63,7 @@ namespace PickNTour.Controllers
             return View();
         }
 
+        // Method to handle incoming send requests from message form that are being sent to a recipient.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Send(SendMessageFormViewModel viewModel)

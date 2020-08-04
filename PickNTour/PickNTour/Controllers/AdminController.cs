@@ -30,24 +30,11 @@ namespace PickNTour.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        // Returns a table of all existing registered users with administrative actions
         public IActionResult ManageUsers()
         {
             return View();
         }
 
-        public IActionResult ManageUpcomingTours()
-        {
-            return View();
-        }
-
-        public IActionResult PreviousTours()
-        {
-            return View();
-        }
     }
 }

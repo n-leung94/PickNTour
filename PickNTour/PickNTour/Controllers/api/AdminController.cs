@@ -34,6 +34,7 @@ namespace PickNTour.Controllers.api
             _mapper = mapper;
         }
 
+        // Returns all registered users of the site from DB
         [HttpGet]
         public IActionResult GetAllUsers()
         {
@@ -44,6 +45,7 @@ namespace PickNTour.Controllers.api
             return Ok(adminUserDto);
         }
 
+        // Returns all registered users that has an active lockout in the DB
         [HttpGet]
         public IActionResult GetLockedoutUsers()
         {
@@ -54,6 +56,7 @@ namespace PickNTour.Controllers.api
             return Ok(adminUserDto);
         }
 
+        // Releases a lockout of a user based on the userID
         [HttpPut("{userId}")]
         public IActionResult ReleaseLockout(string userId)
         {
@@ -69,7 +72,7 @@ namespace PickNTour.Controllers.api
             return Ok();
         }
 
-
+        // Registers a lockout on a user by ID along with the date time the suspension should last until.
         [HttpPut("{userId}/{date}")]
         public IActionResult LockoutUser(string userId, DateTime date)
         {
@@ -77,6 +80,9 @@ namespace PickNTour.Controllers.api
 
             if (userInDb == null)
                 return NotFound();
+
+            if (date == null)
+                return BadRequest("Date and Time for lockout was not specified.");
 
 
             userInDb.LockoutEnd = date;
@@ -103,6 +109,7 @@ namespace PickNTour.Controllers.api
 
         }
 
+        // Local method that removes all associated tours created by a given Tour Guide based on User ID
         public void removeToursFromTourGuide(string userId)
         {
             // First we get tours created by the Tour Guide that has yet to commence
@@ -147,6 +154,7 @@ namespace PickNTour.Controllers.api
 
         }
 
+        // Local method that informs all users of an affected tour due to tour guide lockout via PM if the tour has yet to start.
         public void notifyAffectedUser(string userId, string affectedTour)
         {
             var currAdmin = _userManager.GetUserId(HttpContext.User);
@@ -163,6 +171,7 @@ namespace PickNTour.Controllers.api
             _context.Add(message);
         }
 
+        // Local method that removes all associated bookings made by a given user based on User ID
         public void removeBookingFromUser(string userId, string userName)
         {
             // Find Upcoming Bookings associated with userId
@@ -198,6 +207,7 @@ namespace PickNTour.Controllers.api
 
         }
 
+        // Local method that notifies a tour guide if a booking to their upcoming tour has been cancelled due to user lockout
         public void notifyAffectedTourGuide(string userId, string lockedOutUser,string affectedTour)
         {
             var currAdmin = _userManager.GetUserId(HttpContext.User);

@@ -83,6 +83,7 @@ namespace PickNTour.Controllers.api
 
         // For Tour Guide User Home Page
         [HttpGet]
+        [Authorize(Roles = UserRoles.UserTourGuide)]
         public IActionResult GetTourGuideStats()
         {
             var currUser = _userManager.GetUserId(HttpContext.User);

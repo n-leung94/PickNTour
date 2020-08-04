@@ -71,7 +71,6 @@
                 url: '/api/home/gettourguidestats',
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     $("#msgCount").html(data.unreadMessages);
                     $("#upcomingCount").html(data.upcomingTours);
                     $("#completedCount").html(data.completedTours);
