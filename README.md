@@ -95,6 +95,13 @@ External Plugins Used:
       
     * Release Lockout
       
+**<h3>Installation Instructions for cloned repository for Visual Studio 2019:</h3>**
+ * Ensure NuGet Package Manager is allowed to auto-download missing packages from the dependencies.
+ * Update the database using the provided Data Migrations in the project:
+   * *You can use "update-database" in NuGet Package Manager Console*
+   * Running the data migration also seeds in a user account with admin role
+   * The default admin account credentials seeded in the migration is (Username: "admin@pickntour.com" Password: "Adm!n123")
+ * The project is now ready to run, feel free to create User or Tourguide accounts to try it out. 
       
 **<h2>Planned Future Features:</h2>**
 * Google Maps integration for Tour Locations in Tour Details
