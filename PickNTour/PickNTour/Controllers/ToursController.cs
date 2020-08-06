@@ -109,6 +109,10 @@ namespace PickNTour.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Country countryList = new Country();
+
+                ViewBag.CountryList = countryList.GetCountries();
+
                 var tourModel = new TourFormViewModel();
 
                 return View("TourForm", tourModel);
